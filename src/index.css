@@ -1,0 +1,284 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #09090b;
+  --panel: rgba(9, 9, 11, 0.42);
+  --line: rgba(255, 255, 255, 0.12);
+  --text: #f7f7f0;
+  --muted: #9ba3b3;
+  --cyan: #0083b7;
+  --brick: #c84000;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color-scheme: dark;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+@media (max-width: 900px) {
+  html, body, #root {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100svh;
+    overflow: hidden;
+    overscroll-behavior: none;
+    touch-action: none;
+  }
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+.shell {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: none;
+}
+
+.net {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  touch-action: none;
+}
+
+canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+
+.credit {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  font-size: 0.85rem;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.hud-wrap {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  padding: 2.5rem;
+  pointer-events: none;
+  width: 100%;
+}
+
+.hud {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1300px;
+  gap: 2.5rem;
+  padding: 1.5rem 2rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  pointer-events: auto;
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  box-shadow:
+    0 18px 48px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.info {
+  flex: 1;
+  max-width: 320px;
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--cyan);
+  animation: pulseDot 2s infinite;
+}
+
+@keyframes pulseDot {
+  0% { box-shadow: 0 0 0 0 rgba(0, 131, 183, 0.6); }
+  70% { box-shadow: 0 0 0 6px rgba(0, 131, 183, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 131, 183, 0); }
+}
+
+.title {
+  font-size: 1.4rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.desc {
+  font-size: 0.95rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.poem {
+  position: relative;
+  flex: 2;
+  min-width: 0;
+  padding: 0 2rem;
+  border-left: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+  text-align: center;
+}
+
+.poem-sizer {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.poem-live {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.poem-line {
+  font-size: 1.1rem;
+  color: var(--muted);
+  line-height: 1.7;
+  overflow-wrap: normal;
+}
+
+.poem-word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.poem-space {
+  display: inline;
+}
+
+.ch {
+  display: inline-block;
+}
+
+.metrics {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  max-width: 220px;
+}
+
+.metric-label {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.35rem;
+}
+
+.metric-value {
+  font-size: 2.8rem;
+  font-weight: 300;
+  color: var(--brick);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+@media (max-width: 900px) {
+  .hud-wrap {
+    flex-shrink: 0;
+    padding: 1rem 1rem 0.75rem;
+  }
+
+  .hud {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2.25rem;
+    padding: 1.35rem 1.25rem 1.5rem;
+    touch-action: none;
+  }
+
+  .info {
+    max-width: none;
+  }
+
+  .poem {
+    border: none;
+    padding: 0;
+    width: 100%;
+    text-align: left;
+  }
+
+  .poem-line {
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+
+  .metrics {
+    align-items: flex-start;
+  }
+
+  .metric-value {
+    font-size: 2rem;
+  }
+
+  .net {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    touch-action: none;
+    overscroll-behavior: none;
+  }
+
+  .credit {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    transform: none;
+    width: 100%;
+    text-align: center;
+    padding: 0.65rem 1rem 1.1rem;
+    flex-shrink: 0;
+  }
+}
